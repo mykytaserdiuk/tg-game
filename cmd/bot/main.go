@@ -20,7 +20,7 @@ func echo(b *gotgbot.Bot, ctx *ext.Context) error {
 	opts := &gotgbot.SendMessageOpts{
 		ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 			InlineKeyboard: [][]gotgbot.InlineKeyboardButton{{
-				{Text: "Open mini app", WebApp: &gotgbot.WebAppInfo{Url: fmt.Sprintf("https://www.google.com/search?q=%d", ctx.EffectiveUser.Id)}},
+				{Text: "Open mini app", WebApp: &gotgbot.WebAppInfo{Url: fmt.Sprintf("https://tg-ui-game-production.up.railway.app/?user_id=%d", ctx.EffectiveUser.Id)}},
 			}},
 		},
 	}

@@ -1,7 +1,7 @@
 
 import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 
 
 function Game() {
@@ -12,13 +12,13 @@ function Game() {
       return searchParams.get("user_id")
     } 
     
-    function getCoins() {
-      axios.get(`tg-game-production-8e6f.up.railway.app/?user_id=${userId()}`)
-      .then(response=> {
-        setCoin(response.data)
-      })
-      .catch(res=>console.log(res))
-    }
+    // function getCoins() {
+    //   axios.get(`tg-game-production-8e6f.up.railway.app/?user_id=${userId()}`)
+    //   .then(response=> {
+    //     setCoin(response.data)
+    //   })
+    //   .catch(res=>console.log(res))
+    // }
     function click() {
       axios.put(`tg-game-production-8e6f.up.railway.app/?user_id=${userId()}`)
       .catch(res=>console.log(res))

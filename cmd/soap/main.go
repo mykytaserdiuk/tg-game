@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 
@@ -16,6 +17,7 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/coin", AddCoin).Methods(http.MethodPut)
 	r.HandleFunc("/coin", GetCoin).Methods(http.MethodGet)
+	r.HandleFunc("/", Main).Methods(http.MethodGet)
 	err := http.ListenAndServe("0.0.0.0:3000", r)
 	log.Println("Server start")
 	log.Fatal(err)
@@ -41,4 +43,10 @@ func GetCoin(w http.ResponseWriter, r *http.Request) {
 	}
 	newC := coins[id]
 	w.Write([]byte(string(newC)))
+}
+func Main(w http.ResponseWriter, r *http.Request) {
+	log.Print("Main, full data")
+
+	data, _ := json.Marshal(&coins)
+	w.Write(data)
 }

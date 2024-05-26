@@ -14,9 +14,20 @@ var (
 	coins = make(map[string]int)
 )
 
+func fixContentType(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Do stuff here
+		log.Println(r.RequestURI)
+		w.Header().Add("Content-Type", "application/json")
+		// Call the next handler, which can be another middleware in the chain, or the final handler.
+		next.ServeHTTP(w, r)
+	})
+}
+
 func main() {
 
 	r := mux.NewRouter()
+	r.Use(fixContentType)
 	r.HandleFunc("/coin", AddCoin).Methods(http.MethodPut)
 	r.HandleFunc("/coin", GetCoin).Methods(http.MethodGet)
 	r.HandleFunc("/", Main).Methods(http.MethodGet)
@@ -31,7 +42,6 @@ func main() {
 }
 
 func AddCoin(w http.ResponseWriter, r *http.Request) {
-	log.Print("ADD COIN")
 	id := r.URL.Query().Get("user_id")
 	if id == "" {
 		w.WriteHeader(400)

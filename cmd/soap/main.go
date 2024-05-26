@@ -17,10 +17,12 @@ func main() {
 	r.HandleFunc("/coin", AddCoin).Methods(http.MethodPut)
 	r.HandleFunc("/coin", GetCoin).Methods(http.MethodGet)
 	err := http.ListenAndServe("0.0.0.0:3000", r)
+	log.Println("Server start")
 	log.Fatal(err)
 }
 
 func AddCoin(w http.ResponseWriter, r *http.Request) {
+	log.Print("ADD COIN")
 	id := mux.Vars(r)["user_id"]
 	if id == "" {
 		w.WriteHeader(400)
@@ -31,6 +33,7 @@ func AddCoin(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(string(newC)))
 }
 func GetCoin(w http.ResponseWriter, r *http.Request) {
+	log.Print("GET COIN")
 	id := mux.Vars(r)["user_id"]
 	if id == "" {
 		w.WriteHeader(400)

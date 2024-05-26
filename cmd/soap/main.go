@@ -16,7 +16,7 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/coin", AddCoin).Methods(http.MethodPut)
 	r.HandleFunc("/coin", GetCoin).Methods(http.MethodGet)
-	err := http.ListenAndServe(":1234", r)
+	err := http.ListenAndServe("0.0.0.0:3000", r)
 	log.Fatal(err)
 }
 

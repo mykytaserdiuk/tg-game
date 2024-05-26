@@ -1,14 +1,17 @@
-# Этап сборки
-FROM golang:1.22-alpine AS builder
+# Stage 1
+FROM node:18-alpine as builder
 WORKDIR /app
-COPY go.mod go.sum ./
-RUN go mod download && go mod verify
-COPY . .
-RUN go build -v -o /app/main ./cmd/bot
+COPY ./ui/package*.json ./ui/yarn*.lock ./
+RUN yarn install
+COPY ./ui ./
+RUN yarn build
 
-FROM alpine:3.13
-WORKDIR /app
-COPY --from=builder /app/main .
-EXPOSE 3000
+# Stage 2
+FROM nginx:1.19.0
+WORKDIR /usr/share/nginx/html
+RUN rm -rf ./*
+COPY --from=builder /app/build .
 
-CMD ["/app/main"]
+EXPOSE 8080
+
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

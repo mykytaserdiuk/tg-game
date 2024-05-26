@@ -1,15 +1,20 @@
 
 import axios from 'axios';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import React, { useState} from 'react';
 
 
 function Game() {
-    const [searchParams] = useSearchParams();
+    function useQuery() {
+        const { search } = useLocation();
+      
+        return React.useMemo(() => new URLSearchParams(search), [search]);
+      }
+    const query = useQuery();
     const [coin] = useState(0);
     
     function userId(){
-      return searchParams.get("user_id")
+      return query.get("user_id")
     } 
     
     // function getCoins() {
@@ -20,7 +25,7 @@ function Game() {
     //   .catch(res=>console.log(res))
     // }
     function click() {
-      axios.put(`tg-game-production-8e6f.up.railway.app/?user_id=${userId()}`)
+      axios.put(`https://tg-game-production-8e6f.up.railway.app/?user_id=${userId()}`)
       .catch(res=>console.log(res))
     }
   return (
@@ -31,7 +36,7 @@ function Game() {
         Coins: {coin}
         ID: {userId}
       </p>
-      <button onclick={click}>Add</button>
+      <button onClick={click}>Add</button>
     </div>
   );
 }

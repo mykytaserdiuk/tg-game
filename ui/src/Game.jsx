@@ -6,7 +6,7 @@ import React, { useState} from 'react';
 
 function Game() {
     const [searchParams] = useSearchParams();
-    const [coin, setCoin] = useState(0);
+    const [coin] = useState(0);
     
     function userId(){
       return searchParams.get("user_id")

@@ -1,15 +1,36 @@
-# Stage 1
-FROM node:18-alpine as builder
+# # Stage 1
+# FROM node:18-alpine as builder
+# WORKDIR /app
+# COPY ./ui/package*.json ./ui/yarn*.lock ./
+# RUN yarn install
+# COPY ./ui ./
+# # RUN yarn build
+
+# # Stage 2
+# FROM nginx:1.19.0
+# WORKDIR /usr/share/nginx/html
+# RUN rm -rf ./*
+# COPY --from=builder /app ./app/
+
+# # ENTRYPOINT ["nginx", "-g", "daemon off;"]
+
+# Dockerfile
+ 
+# Use an existing node alpine image as a base image.
+FROM node:18-alpine
+ 
+# Set the working directory.
 WORKDIR /app
-COPY ./ui/package*.json ./ui/yarn*.lock ./
-RUN yarn install
-COPY ./ui ./
-RUN yarn build
-
-# Stage 2
-FROM nginx:1.19.0
-WORKDIR /usr/share/nginx/html
-RUN rm -rf ./*
-COPY --from=builder /app/build .
-
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+ 
+# Copy the package.json file.
+COPY package.json .
+ 
+# Install application dependencies.
+RUN npm install
+ 
+# Copy the rest of the application files.
+COPY . .
+ 
+# Expose the port.
+EXPOSE 3000
+CMD [“npm”, “start”]

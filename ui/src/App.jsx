@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 
 const [searchParams] = useSearchParams();
 const [coin, setCoin] = useState(0);

@@ -25,7 +25,7 @@ function Game() {
     //   .catch(res=>console.log(res))
     // }
     function click() {
-      axios.put(`https://tg-game-production-8e6f.up.railway.app/?user_id=${userId()}`)
+      axios.put(`https://tg-game-production-8e6f.up.railway.app/coin?user_id=${userId()}`)
       .catch(res=>console.log(res))
     }
   return (
@@ -34,7 +34,7 @@ function Game() {
       </header>
       <p>
         Coins: {coin}
-        ID: {userId}
+        ID: {userId()11}
       </p>
       <button onClick={click}>Add</button>
     </div>

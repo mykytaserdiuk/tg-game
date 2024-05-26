@@ -34,7 +34,7 @@ function Game() {
       </header>
       <p>
         Coins: {coin}
-        ID: {userId()11}
+        ID: {userId()}
       </p>
       <button onClick={click}>Add</button>
     </div>

@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 )
 
 var (
@@ -39,7 +40,13 @@ func main() {
 	if port == "" {
 		port = "3000"
 	}
-	log.Fatal(http.ListenAndServe("0.0.0.0:"+port, r))
+
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{"GET", "POST", "PUT"},
+	})
+	hand := c.Handler(r)
+	log.Fatal(http.ListenAndServe("0.0.0.0:"+port, hand))
 	log.Println("Server start")
 }
 

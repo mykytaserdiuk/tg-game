@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -18,9 +19,10 @@ func main() {
 	r.HandleFunc("/coin", AddCoin).Methods(http.MethodPut)
 	r.HandleFunc("/coin", GetCoin).Methods(http.MethodGet)
 	r.HandleFunc("/", Main).Methods(http.MethodGet)
-	err := http.ListenAndServe("0.0.0.0:3000", r)
+	log.Println("Server starting....")
+	fmt.Print("FMT")
+	log.Fatal(http.ListenAndServe("0.0.0.0:3000", r))
 	log.Println("Server start")
-	log.Fatal(err)
 }
 
 func AddCoin(w http.ResponseWriter, r *http.Request) {

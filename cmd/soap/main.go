@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 )
@@ -21,7 +22,11 @@ func main() {
 	r.HandleFunc("/", Main).Methods(http.MethodGet)
 	log.Println("Server starting....")
 	fmt.Print("FMT")
-	log.Fatal(http.ListenAndServe("0.0.0.0:3000", r))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "3000"
+	}
+	log.Fatal(http.ListenAndServe("0.0.0.0:"+port, r))
 	log.Println("Server start")
 }
 

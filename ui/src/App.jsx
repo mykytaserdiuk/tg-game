@@ -7,17 +7,19 @@ import React, { useState, useEffect } from 'react';
 const [searchParams] = useSearchParams();
 const [coin, setCoin] = useState(0);
 
-userId = searchParams.get("user_id")
+function userId(){
+  return searchParams.get("user_id")
+} 
 
 function getCoins() {
-  axios.get(`tg-game-production-8e6f.up.railway.app/?user_id=${userId}`)
+  axios.get(`tg-game-production-8e6f.up.railway.app/?user_id=${userId()}`)
   .then(response=> {
     setCoin(response.data)
   })
   .catch(res=>console.log(res))
 }
 function click() {
-  axios.put(`tg-game-production-8e6f.up.railway.app/?user_id=${userId}`)
+  axios.put(`tg-game-production-8e6f.up.railway.app/?user_id=${userId()}`)
   .catch(res=>console.log(res))
 }
 

@@ -23,7 +23,7 @@ func main() {
 
 func AddCoin(w http.ResponseWriter, r *http.Request) {
 	log.Print("ADD COIN")
-	id := mux.Vars(r)["user_id"]
+	id := r.URL.Query().Get("user_id")
 	if id == "" {
 		w.WriteHeader(400)
 		return
@@ -34,7 +34,7 @@ func AddCoin(w http.ResponseWriter, r *http.Request) {
 }
 func GetCoin(w http.ResponseWriter, r *http.Request) {
 	log.Print("GET COIN")
-	id := mux.Vars(r)["user_id"]
+	id := r.URL.Query().Get("user_id")
 	if id == "" {
 		w.WriteHeader(400)
 		return

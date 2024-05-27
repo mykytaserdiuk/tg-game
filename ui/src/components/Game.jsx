@@ -20,7 +20,7 @@ const Game = () => {
   }
 
   function getCoins() {
-    axios.get(`tg-game-production-8e6f.up.railway.app/coin/?user_id=${userId()}`)
+    axios.get(`%back-end-url%/coin/?user_id=${userId()}`)
       .then(response => {
         setCoin(response.data)
       })
@@ -28,7 +28,7 @@ const Game = () => {
   }
   
   function click() {
-    axios.put(`https://tg-game-production-8e6f.up.railway.app/coin?user_id=${userId()}`)
+    axios.put(`%back-end-url%/coin?user_id=${userId()}`)
       .catch(res => console.log(res))
   }
 

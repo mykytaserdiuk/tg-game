@@ -6,7 +6,6 @@ function App() {
 
   const [initDataUnsafe] = useInitData();
 
-
   return (
     <WebAppProvider value={initDataUnsafe}>
       <BrowserRouter>

@@ -1,9 +1,11 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
@@ -17,10 +19,15 @@ var (
 )
 
 func echo(b *gotgbot.Bot, ctx *ext.Context) error {
+	gameURL := os.Getenv("back-end-url")
+	if gameURL == "" {
+		_, _ = b.SendMessage(ctx.EffectiveChat.Id, "Error on the server. Please try again", nil)
+		return errors.New("back end game url is empty")
+	}
 	opts := &gotgbot.SendMessageOpts{
 		ReplyMarkup: gotgbot.InlineKeyboardMarkup{
 			InlineKeyboard: [][]gotgbot.InlineKeyboardButton{{
-				{Text: "Open mini app", WebApp: &gotgbot.WebAppInfo{Url: fmt.Sprintf("https://tg-ui-game-production.up.railway.app/?user_id=%d", ctx.EffectiveUser.Id)}},
+				{Text: "Open mini app", WebApp: &gotgbot.WebAppInfo{Url: fmt.Sprintf("%s/?user_id=%d", gameURL, ctx.EffectiveUser.Id)}},
 			}},
 		},
 	}

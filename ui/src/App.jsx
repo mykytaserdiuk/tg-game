@@ -4,7 +4,7 @@ import {WebAppProvider, useInitData} from '@vkruglikov/react-telegram-web-app'
 
 function App() {
 
-  const [initDataUnsafe] = useInitData();
+  const [initDataUnsafe] = useInitData();  
 
   return (
     <WebAppProvider value={initDataUnsafe}>
@@ -14,7 +14,8 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
-      {initDataUnsafe.user.id}
+      {window?.Telegram?.WebApp?.platform}
+      {initDataUnsafe.user.first_name} {initDataUnsafe.user.last_name}
     </WebAppProvider>
   );
 }

@@ -18,7 +18,7 @@ var (
 	API = os.Getenv("TG_TOKEN")
 )
 
-var gameURL = os.Getenv("RAILWAY_SERVICE_TG_UI_GAME_URL")
+var gameURL = os.Getenv("front-end-url")
 
 func echo(b *gotgbot.Bot, ctx *ext.Context) error {
 

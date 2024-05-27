@@ -11,7 +11,7 @@ const Game = () => {
   const [coin, setCoin] = useState(0);
   const [webApp] = useContext(WebAppContext)
   function userId() {
-    return 
+    return webApp?.user?.id
   }
   let backUrl = process.env.back_end_url
   function getCoins() {

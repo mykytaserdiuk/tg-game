@@ -2,8 +2,9 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Game from './components/Game';
 import { WebAppProvider, useInitData } from '@vkruglikov/react-telegram-web-app'
 import { createContext } from 'react';
+import InitDataUnsafe from '@vkruglikov/react-telegram-web-app'
 
-export const WebAppContext = createContext()
+export const WebAppContext = createContext<InitDataUnsafe>(null)
 function App() {
   const [initDataUnsafe] = useInitData();
 

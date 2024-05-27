@@ -15,10 +15,10 @@ import (
 )
 
 var (
-	API = "7044707180:AAGMAqNArCMBo7Vr_7ykq89gtd9qOnWSHDg"
+	API = os.Getenv("TG_TOKEN")
 )
 
-var gameURL = os.Getenv("front-end-url")
+var gameURL = os.Getenv("RAILWAY_SERVICE_TG_UI_GAME_URL")
 
 func echo(b *gotgbot.Bot, ctx *ext.Context) error {
 

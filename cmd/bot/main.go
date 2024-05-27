@@ -20,9 +20,10 @@ var (
 
 func echo(b *gotgbot.Bot, ctx *ext.Context) error {
 	gameURL := os.Getenv("front-end-url")
+
 	if gameURL == "" {
 		_, _ = b.SendMessage(ctx.EffectiveChat.Id, "Error on the server. Please try again", nil)
-		return errors.New("back end game url is empty")
+		return errors.New("front end game url is empty")
 	}
 	opts := &gotgbot.SendMessageOpts{
 		ReplyMarkup: gotgbot.InlineKeyboardMarkup{
@@ -49,6 +50,7 @@ func main() {
 		},
 		MaxRoutines: ext.DefaultMaxRoutines,
 	})
+	log.Println(os.Environ())
 	updater := ext.NewUpdater(dispatcher, nil)
 	dispatcher.AddHandler(handlers.NewMessage(message.Text, echo))
 

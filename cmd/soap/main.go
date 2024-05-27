@@ -25,13 +25,8 @@ func fixContentType(next http.Handler) http.Handler {
 
 func main() {
 
-	viper.AddConfigPath("./")
-	viper.SetConfigName(".env")
-	viper.SetConfigType("env")
-
-	viper.AutomaticEnv()
-	viper.ReadInConfig()
 	log.Println(os.Environ())
+	viper.AutomaticEnv()
 
 	cfg := mysql.Config{}
 	err := viper.Unmarshal(&cfg)

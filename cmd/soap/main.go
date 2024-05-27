@@ -1,19 +1,15 @@
 package main
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/gorilla/mux"
-	"github.com/mykytaserdiuk/souptgbot/internal/db/postgres"
+	"github.com/mykytaserdiuk/souptgbot/internal/db/mysql"
+	"github.com/mykytaserdiuk/souptgbot/internal/soap/handler"
 	"github.com/rs/cors"
 	"github.com/spf13/viper"
-)
-
-var (
-	coins = make(map[string]int)
 )
 
 func fixContentType(next http.Handler) http.Handler {
@@ -23,29 +19,34 @@ func fixContentType(next http.Handler) http.Handler {
 		w.Header().Add("Content-Type", "application/json")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 
-		// Call the next handler, which can be another middleware in the chain, or the final handler.
 		next.ServeHTTP(w, r)
 	})
 }
 
 func main() {
 
-	r := mux.NewRouter()
-	r.Use(fixContentType)
-	r.HandleFunc("/coin", AddCoin).Methods(http.MethodPut)
-	r.HandleFunc("/coin", GetCoin).Methods(http.MethodGet)
-	r.HandleFunc("/", Main).Methods(http.MethodGet)
+	viper.AddConfigPath("./")
+	viper.SetConfigName(".env")
+	viper.SetConfigType("env")
 
-	cfg := postgres.Config{}
+	viper.AutomaticEnv()
+	viper.ReadInConfig()
+	log.Println(os.Environ())
+
+	cfg := mysql.Config{}
 	err := viper.Unmarshal(&cfg)
 	if err != nil {
 		log.Fatal(err)
 	}
-	
-	_, err = postgres.NewPool(&cfg)
+	err = cfg.Validate()
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	r := mux.NewRouter()
+	r.Use(fixContentType)
+	_ = handler.New(r)
+
 	log.Println("Server starting....")
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -56,34 +57,13 @@ func main() {
 		AllowedOrigins: []string{"*"},
 		AllowedMethods: []string{"GET", "POST", "PUT"},
 	})
+
 	hand := c.Handler(r)
+	_, err = mysql.NewPool(&cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	log.Fatal(http.ListenAndServe("0.0.0.0:"+port, hand))
 	log.Println("Server start")
-}
-
-func AddCoin(w http.ResponseWriter, r *http.Request) {
-	id := r.URL.Query().Get("user_id")
-	if id == "" {
-		w.WriteHeader(400)
-		return
-	}
-	newC := coins[id] + 1
-	coins[id] = newC
-	w.Write([]byte(string(newC)))
-}
-func GetCoin(w http.ResponseWriter, r *http.Request) {
-	log.Print("GET COIN")
-	id := r.URL.Query().Get("user_id")
-	if id == "" {
-		w.WriteHeader(400)
-		return
-	}
-	newC := coins[id]
-	w.Write([]byte(string(newC)))
-}
-func Main(w http.ResponseWriter, r *http.Request) {
-	log.Print("Main, full data")
-
-	data, _ := json.Marshal(&coins)
-	w.Write(data)
 }

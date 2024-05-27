@@ -39,7 +39,6 @@ const Game = () => {
       <p>
         Coins: {coin}
         ID: {userId()}
-        {this.context}
       </p>
       <button onClick={click}>Add</button>
     </div>

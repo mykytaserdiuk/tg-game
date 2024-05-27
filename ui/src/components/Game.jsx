@@ -1,26 +1,21 @@
-
+import "../App.css"
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import {WebAppContext} from '../App.jsx'
 
 const Game = () => {
-  function useQuery() {
-    const { search } = useLocation();
-    return React.useMemo(() => new URLSearchParams(search), [search]);
-  }
-
   useEffect(() => {
     getCoins()
   })
 
-  const query = useQuery();
   const [coin, setCoin] = useState(0);
+  const [webApp] = useContext(WebAppContext)
   function userId() {
-    return query.get("user_id")
+    return 
   }
   let backUrl = process.env.back_end_url
   function getCoins() {
-    axios.get(`${backUrl}%/coin/?user_id=${userId()}`)
+    axios.get(`${backUrl}/coin/?user_id=${userId()}`)
       .then(response => {
         setCoin(response.data)
       })

@@ -1,8 +1,6 @@
 package main
 
 import (
-	"errors"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -12,30 +10,12 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/message"
+	"github.com/mykytaserdiuk/souptgbot/internal/bot/handler"
 )
 
 var (
 	API = os.Getenv("TG_TOKEN")
 )
-
-var gameURL = os.Getenv("front-end-url")
-
-func echo(b *gotgbot.Bot, ctx *ext.Context) error {
-
-	if gameURL == "" {
-		_, _ = b.SendMessage(ctx.EffectiveChat.Id, "Error on the server. Please try again", nil)
-		return errors.New("front end game url is empty")
-	}
-	opts := &gotgbot.SendMessageOpts{
-		ReplyMarkup: gotgbot.InlineKeyboardMarkup{
-			InlineKeyboard: [][]gotgbot.InlineKeyboardButton{{
-				{Text: "Open mini app", WebApp: &gotgbot.WebAppInfo{Url: fmt.Sprintf("%s/?user_id=%d", gameURL, ctx.EffectiveUser.Id)}},
-			}},
-		},
-	}
-	_, err := b.SendMessage(ctx.EffectiveChat.Id, "Game", opts)
-	return err
-}
 
 func main() {
 	bot, err := gotgbot.NewBot(API, nil)
@@ -51,9 +31,12 @@ func main() {
 		},
 		MaxRoutines: ext.DefaultMaxRoutines,
 	})
+	var gameURL = os.Getenv("front-end-url")
+	handler := handler.New(gameURL)
+
 	log.Println(os.Environ())
 	updater := ext.NewUpdater(dispatcher, nil)
-	dispatcher.AddHandler(handlers.NewMessage(message.Text, echo))
+	dispatcher.AddHandler(handlers.NewMessage(message.Text, handler.SendGame))
 
 	// Start receiving updates.
 	err = updater.StartPolling(bot, &ext.PollingOpts{

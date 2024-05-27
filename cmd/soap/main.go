@@ -2,13 +2,14 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/gorilla/mux"
+	"github.com/mykytaserdiuk/souptgbot/internal/db/postgres"
 	"github.com/rs/cors"
+	"github.com/spf13/viper"
 )
 
 var (
@@ -34,8 +35,18 @@ func main() {
 	r.HandleFunc("/coin", AddCoin).Methods(http.MethodPut)
 	r.HandleFunc("/coin", GetCoin).Methods(http.MethodGet)
 	r.HandleFunc("/", Main).Methods(http.MethodGet)
+
+	cfg := postgres.Config{}
+	err := viper.Unmarshal(&cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
+	
+	_, err = postgres.NewPool(&cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
 	log.Println("Server starting....")
-	fmt.Print("FMT")
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "3000"

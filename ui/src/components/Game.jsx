@@ -18,9 +18,9 @@ const Game = () => {
   function userId() {
     return query.get("user_id")
   }
-
+  let backUrl = process.env.back_end_url
   function getCoins() {
-    axios.get(`%back-end-url%/coin/?user_id=${userId()}`)
+    axios.get(`${backUrl}%/coin/?user_id=${userId()}`)
       .then(response => {
         setCoin(response.data)
       })
@@ -28,7 +28,7 @@ const Game = () => {
   }
   
   function click() {
-    axios.put(`%back-end-url%/coin?user_id=${userId()}`)
+    axios.put(`${backUrl}/coin?user_id=${userId()}`)
       .catch(res => console.log(res))
   }
 

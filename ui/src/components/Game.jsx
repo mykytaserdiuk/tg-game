@@ -9,9 +9,9 @@ const Game = () => {
     return React.useMemo(() => new URLSearchParams(search), [search]);
   }
 
-  useEffect(c => {
+  useEffect(() => {
     getCoins()
-  }, [])
+  })
 
   const query = useQuery();
   const [coin, setCoin] = useState(0);

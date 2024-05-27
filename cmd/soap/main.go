@@ -29,7 +29,7 @@ func main() {
 	viper.AutomaticEnv()
 
 	cfg := mysql.Config{}
-	err := viper.Unmarshal(&cfg)
+	err := cfg.LoadFromEnv()
 	if err != nil {
 		log.Fatal(err)
 	}

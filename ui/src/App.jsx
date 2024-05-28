@@ -25,15 +25,12 @@ function App() {
 
   return (
     <WebAppProvider >
-      <WebAppContext.Provider value={initDataUnsafe}>
-        <BrowserRouter>
-          <Routes>
-            <Route path='/' element={<Game />}>
-            </Route>
-          </Routes>
-        </BrowserRouter>
-        {initDataUnsafe?.user?.first_name} {initDataUnsafe?.user?.last_name}
-      </WebAppContext.Provider>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<Game />}>
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </WebAppProvider>
   );
 }

@@ -6,30 +6,26 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 	"github.com/mykytaserdiuk/souptgbot/internal/db/mysql"
 	"github.com/mykytaserdiuk/souptgbot/internal/soap/handler"
+	repo "github.com/mykytaserdiuk/souptgbot/internal/soap/repository/mysql"
+	"github.com/mykytaserdiuk/souptgbot/internal/soap/service"
+	"github.com/mykytaserdiuk/souptgbot/pkg/web"
 	"github.com/rs/cors"
 	"github.com/spf13/viper"
 )
 
-func fixContentType(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Do stuff here
-		log.Println(r.RequestURI)
-		w.Header().Add("Content-Type", "application/json")
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-
-		next.ServeHTTP(w, r)
-	})
-}
-
 func main() {
 
-	log.Println(os.Environ())
+	err := godotenv.Load("dev.env")
+	if err != nil {
+		log.Fatal(err)
+	}
 	viper.AutomaticEnv()
 
 	cfg := mysql.Config{}
-	err := cfg.LoadFromEnv()
+	err = cfg.LoadFromEnv()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -39,8 +35,25 @@ func main() {
 	}
 
 	r := mux.NewRouter()
-	r.Use(fixContentType)
-	_ = handler.New(r)
+	r.Use(web.FixContentType)
+
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{"GET", "POST", "PUT"},
+	})
+
+	dbPool, err := mysql.NewPool(&cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	walletRepo := repo.NewWalletRepo()
+	userRepo := repo.NewUserRepo()
+
+	walletService := service.NewWalletService(dbPool, walletRepo, userRepo)
+
+	hand := c.Handler(r)
+	_ = handler.New(r, walletService)
 
 	log.Println("Server starting....")
 	port := os.Getenv("PORT")
@@ -48,17 +61,6 @@ func main() {
 		port = "3000"
 	}
 
-	c := cors.New(cors.Options{
-		AllowedOrigins: []string{"*"},
-		AllowedMethods: []string{"GET", "POST", "PUT"},
-	})
-
-	hand := c.Handler(r)
-	_, err = mysql.NewPool(&cfg)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	log.Fatal(http.ListenAndServe("0.0.0.0:"+port, hand))
 	log.Println("Server start")
+	log.Fatal(http.ListenAndServe("0.0.0.0:"+port, hand))
 }

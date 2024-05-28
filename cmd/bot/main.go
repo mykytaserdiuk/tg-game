@@ -52,8 +52,6 @@ func main() {
 		panic("failed to start polling: " + err.Error())
 	}
 	log.Printf("%s has been started...\n", bot.User.Username)
-
-	// Idle, to keep updates coming in, and avoid bot stopping.
 	updater.Idle()
 
 	port := "8080"

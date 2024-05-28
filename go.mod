@@ -33,6 +33,7 @@ require (
 
 require (
 	github.com/gorilla/mux v1.8.1
+	github.com/joho/godotenv v1.5.1
 	github.com/rs/cors v1.11.0
 	github.com/spf13/viper v1.18.2
 	go.uber.org/atomic v1.9.0 // indirect

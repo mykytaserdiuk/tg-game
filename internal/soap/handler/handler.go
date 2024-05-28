@@ -2,51 +2,73 @@ package handler
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/mykytaserdiuk/souptgbot/internal/soap"
 )
 
 type Handler struct {
+	walletService soap.WalletService
 }
 
-var (
-	coins = make(map[string]int)
-)
+func New(r *mux.Router, walletService soap.WalletService) *Handler {
+	h := &Handler{walletService}
 
-func New(r *mux.Router) *Handler {
-	h := &Handler{}
-
-	r.HandleFunc("/coin", h.AddCoin).Methods(http.MethodPut)
-	r.HandleFunc("/coin", h.GetCoin).Methods(http.MethodGet)
+	r.HandleFunc("/wallet", h.CreateCoin).Methods(http.MethodPost)
+	r.HandleFunc("/wallet", h.GetWallet).Methods(http.MethodGet)
 	r.HandleFunc("/", h.Main).Methods(http.MethodGet)
 	return h
 }
 
-func (h *Handler) AddCoin(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) CreateCoin(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("user_id")
 	if id == "" {
-		w.WriteHeader(400)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	newC := coins[id] + 1
-	coins[id] = newC
-	w.Write([]byte(string(newC)))
+
 }
-func (h *Handler) GetCoin(w http.ResponseWriter, r *http.Request) {
-	log.Print("GET COIN")
+func (h *Handler) GetWallet(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("user_id")
 	if id == "" {
-		w.WriteHeader(400)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	newC := coins[id]
-	w.Write([]byte(string(newC)))
+	walletID := r.URL.Query().Get("wallet_id")
+	if walletID == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	wallet, err := h.walletService.Get(r.Context(), walletID)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	data, err := json.Marshal(&wallet)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(data)
 }
 func (h *Handler) Main(w http.ResponseWriter, r *http.Request) {
-	log.Print("Main, full data")
-
-	data, _ := json.Marshal(&coins)
-	w.Write(data)
+	data, err := h.walletService.Admin(r.Context())
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	json, err := json.Marshal(&data)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(json)
 }

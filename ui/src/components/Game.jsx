@@ -2,6 +2,7 @@ import "../App.css"
 import axios from 'axios';
 import React, { useState, useEffect, useContext } from 'react';
 import {WebAppContext} from '../App.jsx'
+import { useWebApp } from "@vkruglikov/react-telegram-web-app";
 
 const Game = () => {
   useEffect(() => {
@@ -9,9 +10,11 @@ const Game = () => {
   })
 
   const [coin, setCoin] = useState(0);
-  const [webApp] = useContext(WebAppContext)
+  // const [webApp] = useContext(WebAppContext)
+  const [w] = useWebApp()
   function userId() {
-    return webApp?.user?.id
+    return 
+    // webApp?.user?.id
   }
   let backUrl = process.env.back_end_url
   function getCoins() {
@@ -29,6 +32,7 @@ const Game = () => {
 
   return (
     <div className="App">
+      {console.log(w)}
       <header className="App-header">
       </header>
       <p>

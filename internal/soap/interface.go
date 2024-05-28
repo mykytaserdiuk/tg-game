@@ -13,7 +13,8 @@ type WalletService interface {
 	IsExists(ctx context.Context, walletID string) error
 	Admin(ctx context.Context) ([]*models.Wallet, error)
 }
-type UserService struct {
+type UserService interface {
+	Get(ctx context.Context, userID string) (*models.User, error)
 }
 
 type WalletRepo interface {

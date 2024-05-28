@@ -20,7 +20,7 @@ func main() {
 
 	err := godotenv.Load("dev.env")
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	viper.AutomaticEnv()
 
@@ -51,9 +51,10 @@ func main() {
 	userRepo := repo.NewUserRepo()
 
 	walletService := service.NewWalletService(dbPool, walletRepo, userRepo)
+	userService := service.NewUserService(dbPool, walletRepo, userRepo)
 
 	hand := c.Handler(r)
-	_ = handler.New(r, walletService)
+	_ = handler.New(r, walletService, userService)
 
 	log.Println("Server starting....")
 	port := os.Getenv("PORT")

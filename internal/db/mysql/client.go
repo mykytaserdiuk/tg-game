@@ -3,6 +3,7 @@ package mysql
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/mykytaserdiuk/souptgbot/pkg/models"
 	"gorm.io/driver/mysql"
@@ -21,6 +22,14 @@ func NewPool(cfg *Config) (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
+	sqlDB, err := db.DB()
+	if err != nil {
+		return nil, err
+	}
+	sqlDB.SetConnMaxIdleTime(5 * time.Second)
+	sqlDB.SetConnMaxLifetime(10 * time.Second)
+	sqlDB.SetMaxIdleConns(100)
+	sqlDB.SetMaxOpenConns(100)
 	err = migrate(db)
 	if err != nil {
 		return nil, err

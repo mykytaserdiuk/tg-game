@@ -18,7 +18,7 @@ import (
 
 func main() {
 
-	err := godotenv.Load("dev.env")
+	err := godotenv.Load("pr.env")
 	if err != nil {
 		log.Println(err)
 	}

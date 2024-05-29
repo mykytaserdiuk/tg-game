@@ -28,7 +28,7 @@ func NewPool(cfg *Config) (*gorm.DB, error) {
 	}
 	sqlDB.SetConnMaxIdleTime(5 * time.Second)
 	sqlDB.SetConnMaxLifetime(10 * time.Second)
-	sqlDB.SetMaxIdleConns(100)
+	sqlDB.SetMaxIdleConns(0)
 	sqlDB.SetMaxOpenConns(100)
 	err = migrate(db)
 	if err != nil {

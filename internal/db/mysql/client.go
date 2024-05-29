@@ -11,10 +11,7 @@ import (
 
 func NewPool(cfg *Config) (*gorm.DB, error) {
 	log.Printf("%s", cfg.DBurl)
-	db, err := gorm.Open(postgres.New(postgres.Config{
-		DriverName: "postgres",
-		DSN:        cfg.DBurl,
-	}), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(cfg.DBurl), &gorm.Config{})
 
 	if err != nil {
 		return nil, err

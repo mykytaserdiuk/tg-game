@@ -38,7 +38,7 @@ function App() {
       })
   }
 
-  if (!isLogin) {
+  if (!initDataUnsafe?.user?.id) {
     return (
       <div >
         <h1 style={{ color: 'blue', borderColor: 'blue' }}>You non person</h1>
@@ -48,6 +48,7 @@ function App() {
 
   return (
     <WebAppProvider >
+    {!isLogin ?<>
       {window?.Telegram?.platform === "android" ? <>Android</> : <></>}
       <BrowserRouter>
         <Routes>
@@ -55,6 +56,9 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
+      </>:<>
+      <h1 style={{ color: 'blue', borderColor: 'blue' }}>You not authorize</h1>
+      </>} 
     </WebAppProvider>
   );
 }

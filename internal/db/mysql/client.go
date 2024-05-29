@@ -11,7 +11,7 @@ import (
 
 func NewPool(cfg *Config) (*gorm.DB, error) {
 	// connStr := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", cfg.User, cfg.Password, cfg.Host, cfg.Port, cfg.DBName)
-	connStr := `mysql://root:inACeHxHtxLHtTJnCcyTtYCiWCBSKbSn@mysql.railway.internal:3306/railway`
+	connStr := `mysql://root:inACeHxHtxLHtTJnCcyTtYCiWCBSKbSn@tcp(mysql.railway.internal):3306/railway`
 	log.Printf("%s", connStr)
 	db, err := gorm.Open(mysql.New(mysql.Config{
 		DriverName:                "mysql",

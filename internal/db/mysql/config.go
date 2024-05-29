@@ -47,6 +47,7 @@ func (c *Config) LoadFromEnv() error {
 	// // 	return errors.New("MYSQLPORT empty")
 	// // }
 	// c.Port = port
+
 	c.Url = os.Getenv("DATABASE_PRIVATE_URL")
 	if c.Url == "" {
 		return errors.New("DATABASE_PRIVATE_URL empty")

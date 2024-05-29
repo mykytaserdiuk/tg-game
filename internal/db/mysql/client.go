@@ -10,12 +10,10 @@ import (
 )
 
 func NewPool(cfg *Config) (*gorm.DB, error) {
-	//  connStr := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", cfg.User, cfg.Password, cfg.Host, cfg.Port, cfg.DBName)
-	// connStr := `mysql://root:inACeHxHtxLHtTJnCcyTtYCiWCBSKbSn@tcp(mysql.railway.internal:3306)/railway`
-	log.Printf("%s", cfg.Url)
+	log.Printf("%s", cfg.DBurl)
 	db, err := gorm.Open(postgres.New(postgres.Config{
 		DriverName: "postgres",
-		DSN:        cfg.Url,
+		DSN:        cfg.DBurl,
 	}), &gorm.Config{})
 
 	if err != nil {

@@ -23,6 +23,7 @@ func main() {
 		log.Println(err)
 	}
 	viper.AutomaticEnv()
+	log.Println(os.Environ())
 
 	cfg := mysql.Config{}
 	err = cfg.LoadFromEnv()
